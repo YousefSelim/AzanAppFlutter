@@ -9,11 +9,11 @@ Future<List<String>> getData() async{
       Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       var now = DateTime.now();
       var formatter = DateFormat("dd-MM-yyyy");
-      String now_str = formatter.format(now);
+      String nowStr = formatter.format(now);
       var out=["N/A","N/A","N/A","N/A","N/A"];
-      var request_url='http://api.aladhan.com/v1/calendar?latitude='+position.latitude.toString()+'&longitude='+position.longitude.toString()+'&method=5&school=0&month=${now.month}&year=${now.year}';
-      print("Requesting : "+request_url);
-      final response =await http.get(request_url);
+      var requestURL='http://api.aladhan.com/v1/calendar?latitude='+position.latitude.toString()+'&longitude='+position.longitude.toString()+'&method=5&school=0&month=${now.month}&year=${now.year}';
+      print("Requesting : "+requestURL);
+      final response =await http.get(requestURL);
       if(response.statusCode==200)
        {
          print(response.body);
@@ -24,12 +24,15 @@ Future<List<String>> getData() async{
          for(item in data)
           {
            String date = item["date"]["gregorian"]["date"];
-           print("now is "+now_str);
+           print("now is "+nowStr);
            print(date);
-           if(date==now_str)
+           if(date==nowStr)
             {
-            out[0]=item["timings"]["Asr"];
-            out[1]=item["timings"]["Fajr"];
+            out[0]=item["timings"]["Fajr"];
+            out[1]=item["timings"]["Dhuhr"];
+            out[2]=item["timings"]["Asr"];
+            out[3]=item["timings"]["Maghrib"];
+            out[4]=item["timings"]["Isha"];
             }
           }
          
