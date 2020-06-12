@@ -6,10 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import "./jsonget.dart";
 import './azan_display_widget.dart';
+import 'firstlogin.dart';
 Future<List<String>> severData;
 
 void main() {
-runApp(TestSL());
+runApp(FirstApp());
 } 
 class TestSL extends StatelessWidget {
   //const TestSL({Key key}) : super(key: key);
@@ -31,7 +32,14 @@ class TestSL extends StatelessWidget {
           ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Center(
+          body: 
+          Container(
+          decoration: BoxDecoration(
+            image : DecorationImage(image: AssetImage("images/bkg.png"),fit: BoxFit.fill),
+            
+            //color: Colors.red
+            ),
+          child :Center(
             child: Column(
               children: <Widget>[
                 Container(
@@ -124,6 +132,7 @@ class TestSL extends StatelessWidget {
               ],
             ),
           )),
+      ),
     ),
   );
 

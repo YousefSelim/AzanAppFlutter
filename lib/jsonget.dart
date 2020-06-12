@@ -4,9 +4,26 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Future<List<String>> getData() async{
-      Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print("geting loc");
+      Position position;
+      await Permission.location.request().isGranted;
+      print(await Geolocator().isLocationServiceEnabled()==true);
+      if(await Geolocator().checkGeolocationPermissionStatus()==GeolocationStatus.granted)
+       {
+       position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+       print("Got it from gps");
+       }
+       else
+       {
+       print("unenabled");
+       //Geolocator().getCurrentPosition();
+
+       position= Position(latitude: 0,longitude: 0);
+       }
+      //print(position.latitude.toString());
       var now = DateTime.now();
       var formatter = DateFormat("dd-MM-yyyy");
       String nowStr = formatter.format(now);
