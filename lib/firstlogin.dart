@@ -39,7 +39,7 @@ class _FirstPageAppState extends State<FirstPageApp> {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("images/bkg.png"), fit: BoxFit.fill),
+                image: AssetImage("images/bg_new.jpg"), fit: BoxFit.fill),
 
             //color: Colors.red
           ),

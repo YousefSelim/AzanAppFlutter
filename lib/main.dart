@@ -9,6 +9,8 @@ import './azan_display_widget.dart';
 import 'firstlogin.dart';
 import 'test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+
 Future<List<String>> severData;
 
 void main() {
@@ -16,7 +18,7 @@ runApp(FirstApp());
 } 
 class TestSL extends StatelessWidget {
   //const TestSL({Key key}) : super(key: key);
-
+   
   @override
   Widget build(BuildContext context) {
     return buildMaterialApp();
@@ -24,20 +26,25 @@ class TestSL extends StatelessWidget {
 
   MaterialApp buildMaterialApp() {
     severData=getData();
+SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
     return MaterialApp(
     title: 'Fetch Data Example',
+    
     theme: ThemeData(
         primarySwatch: Colors.green, backgroundColor: Colors.purple),
+    
     home: Container(
       decoration: BoxDecoration(color: Colors.purple[800]
           //image: new DecorationImage(image: new AssetImage("images/bkg_img.png"))
           ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
+       
           body: 
           Container(
           decoration: BoxDecoration(
-            image : DecorationImage(image: AssetImage("images/bkg.png"),fit: BoxFit.fill),
+            image : DecorationImage(image: AssetImage("images/bg_new.jpg"),fit: BoxFit.fill),
             
             //color: Colors.red
             ),
@@ -87,7 +94,12 @@ class TestSL extends StatelessWidget {
                       {
                       //Only ok Response
                       return Container(
-                        margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                        margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
+                        padding:EdgeInsets.fromLTRB(10, 10, 0, 10) ,
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
                         child: Column(
                           children: <Widget>[
                             AzanDisplay("Fajr", snapshot.data[0]),
@@ -127,7 +139,14 @@ class TestSL extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Column(
+                            Container(
+                        margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
+                        padding:EdgeInsets.fromLTRB(10, 10, 0, 10) ,
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                          child:Column(
                               children: <Widget>[
                                 AzanDisplay("Fajr", "N/A"),
                                 AzanDisplay("Duhr", "N/A"),
@@ -135,6 +154,7 @@ class TestSL extends StatelessWidget {
                                 AzanDisplay("Maghrib", "N/A"),
                                 AzanDisplay("Isha", "N/A"),
                               ],
+                            ),
                             ),
                           ],
                         ));
@@ -162,7 +182,14 @@ class TestSL extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Column(
+                            Container(
+                        margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
+                        padding:EdgeInsets.fromLTRB(10, 10, 0, 10) ,
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                          child:Column(
                               children: <Widget>[
                                 AzanDisplay("Fajr", "N/A"),
                                 AzanDisplay("Duhr", "N/A"),
@@ -170,6 +197,7 @@ class TestSL extends StatelessWidget {
                                 AzanDisplay("Maghrib", "N/A"),
                                 AzanDisplay("Isha", "N/A"),
                               ],
+                            ),
                             ),
                           ],
                         ));
@@ -183,14 +211,6 @@ class TestSL extends StatelessWidget {
   );
 
   }
-Future<bool> isFirstSignIn() async
-{
-    ///Check If Location is avaialble 
-  SharedPreferences pf = await SharedPreferences.getInstance();
-  if (pf.getDouble("lat") == null && pf.getDouble("lat") == 0.0){
-    //If Location is not available return to main page
-  } 
-}
 }
 /*
 class MyApp extends StatefulWidget {

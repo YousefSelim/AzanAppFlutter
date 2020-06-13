@@ -18,7 +18,7 @@ class SSS extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment:Alignment.center,
-      margin: EdgeInsets.fromLTRB(10, 2, 40, 5),
+      margin: EdgeInsets.fromLTRB(0, 2, 0, 5),
       child: Row(
         children: <Widget>[
           Container(
@@ -26,7 +26,7 @@ class SSS extends StatelessWidget {
             width: 90,
             height: 50.0,
             padding: EdgeInsets.fromLTRB(9, 13, 0, 10),
-            margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
             child: Text(
               prayername +":",
               style: TextStyle(
