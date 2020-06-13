@@ -3,30 +3,37 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
-import 'package:nice_button/nice_button.dart';
 import 'dart:async';
 import 'main.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
+import 'package:toast/toast.dart';
 
 void main() async {
-  if(await Geolocator().checkGeolocationPermissionStatus()==GeolocationStatus.granted)
-  {
+  if (await Geolocator().checkGeolocationPermissionStatus() ==
+      GeolocationStatus.granted) {
     runApp(TestSL());
-  }
-  else
-  {
-  runApp(FirstApp());
+  } else {
+    runApp(FirstApp());
   }
 }
 
-class FirstApp extends StatelessWidget  {
+class FirstPageApp extends StatefulWidget {
+  FirstPageApp({Key key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context)  {
+  _FirstPageAppState createState() => _FirstPageAppState();
+}
+
+class _FirstPageAppState extends State<FirstPageApp> {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Salatuk',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Welcome'),
+          title: Text('Welcome To Salatuk'),
           backgroundColor: Colors.deepPurple[500],
         ),
         body: Container(
@@ -43,10 +50,7 @@ class FirstApp extends StatelessWidget  {
                 children: <Widget>[
                   Container(
                       child: Text(
-                    """
-This app needs to access your location 
-Click continue to grant permisson 
-Also make sure location service is on\n""",
+                    "This app needs to access your location\n Click continue to grant permisson\n Also make sure location service is on\n",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 13,
@@ -60,11 +64,43 @@ Also make sure location service is on\n""",
                             style: TextStyle(color: Colors.black, fontSize: 20),
                           ),
                           color: Colors.white,
-                          onPressed: ()async {
-                            if (await Permission.location.request().isGranted && await Geolocator().isLocationServiceEnabled()==true) {
-                            print("hi");
-                            
-                            runApp(TestSL());
+                          onPressed: () async {
+                            msgToast("Getting location...");
+                            SharedPreferences pf =
+                                await SharedPreferences.getInstance();
+                            if (pf.getDouble("lat") != null &&
+                                pf.getDouble("lat") != 0.0) {
+                               runApp(TestSL());
+                              return;  //TODO : enable in production
+                            }
+                            if (await Permission.location.request().isGranted) {
+                              if (await Geolocator()
+                                      .isLocationServiceEnabled() ==
+                                  true) {
+
+                                Position position = await Geolocator()
+                                    .getCurrentPosition(
+                                        desiredAccuracy: LocationAccuracy.high).timeout(Duration(seconds: 20),
+                                        onTimeout: () {print("timeout");return null;}
+                                        );
+                                if (position != null) {
+                                  pf.setDouble("lat", position.altitude);
+                                  pf.setDouble("long", position.longitude);
+                                  runApp(TestSL());
+                                  print(position.latitude);
+                                }
+                                else
+                                {
+                                  errorToast("Couldn\'t Retrieve GPS Location Now\nTry Other Options");
+                                }
+                              }
+                              else
+                              {
+                                errorToast("Please Turn GPS on!");
+                              }
+                            } 
+                            else {
+                              errorToast("Please Grant GPS Permission!");
                             }
                           })),
                 ],
@@ -74,6 +110,36 @@ Also make sure location service is on\n""",
         ),
       ),
     );
-    void firstInit(BuildContext con) async {}
+  }
+void errorToast(String msg) {
+  print("Error Toast: "+msg);
+    Toast.show(msg, context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        backgroundRadius: 9);
+  }
+
+  void msgToast(String msg) {
+    Toast.show(msg, context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM,
+        backgroundColor: Colors.grey[400],
+        textColor: Colors.black,
+        backgroundRadius: 9);
+  }
+  
+}
+
+class FirstApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Material App',
+      home: Scaffold(
+        body: FirstPageApp(),
+      ),
+    );
   }
 }

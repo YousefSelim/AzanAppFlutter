@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import "./jsonget.dart";
 import './azan_display_widget.dart';
 import 'firstlogin.dart';
+import 'test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 Future<List<String>> severData;
 
 void main() {
@@ -81,6 +83,9 @@ class TestSL extends StatelessWidget {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       print(snapshot.data[0] + "00");
+                      if(snapshot.data[5]=="OK")
+                      {
+                      //Only ok Response
                       return Container(
                         margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
                         child: Column(
@@ -93,6 +98,47 @@ class TestSL extends StatelessWidget {
                           ],
                         ),
                       );
+                      }
+                      else
+                      {
+                        String errMsg = "UNKNOWN ERR";
+                        if(snapshot.data[5]=="No Location") errMsg ="لا يوجد بيانات موقع";
+                        if(snapshot.data[5]=="Couldn't reach DB") errMsg ="حدث خطأ اثناء الوصول لقاعدة البيانات";
+                        if(snapshot.data[5]=="Could't Reach API") errMsg ="تحقق من وصولك بالانترنت";
+                        return Container(
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              padding: EdgeInsets.fromLTRB(9, 0, 0, 0),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  color: Colors.black38),
+                              child: Text(
+                                "جاري تحميل بعض البيانات",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontFamily: "Arial",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  //backgroundColor: Colors.black45
+                                ),
+                              ),
+                            ),
+                            Column(
+                              children: <Widget>[
+                                AzanDisplay("Fajr", "N/A"),
+                                AzanDisplay("Duhr", "N/A"),
+                                AzanDisplay("Asr", "N/A"),
+                                AzanDisplay("Maghrib", "N/A"),
+                                AzanDisplay("Isha", "N/A"),
+                              ],
+                            ),
+                          ],
+                        ));
+                      }
                     }
                     return Container(
                         margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -137,6 +183,14 @@ class TestSL extends StatelessWidget {
   );
 
   }
+Future<bool> isFirstSignIn() async
+{
+    ///Check If Location is avaialble 
+  SharedPreferences pf = await SharedPreferences.getInstance();
+  if (pf.getDouble("lat") == null && pf.getDouble("lat") == 0.0){
+    //If Location is not available return to main page
+  } 
+}
 }
 /*
 class MyApp extends StatefulWidget {
